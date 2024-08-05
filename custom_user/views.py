@@ -60,7 +60,7 @@ class Signup(View):
 
                 # Send OTP email
                 subject = 'Your OTP Code'
-                from_email = 'info.demodjango@gmail.com'
+                from_email = '*********@gmail.com'
                 recipient_list = [email]
                 text_content = f"Your OTP code is {otp}."
                 email = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
