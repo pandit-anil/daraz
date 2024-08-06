@@ -1,0 +1,102 @@
+{% extends "master.html" %}
+{% block content %}
+<div class="container  margin-top-100">
+
+<div class="container mt-4 ">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{product.image.url}}" alt="Product Image" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h5>{{product.name }}</h5>
+           <br>
+           {% if low %}
+           <div class="alert alert-warning">
+               {{ low }}
+           </div>
+       {% endif %}
+           <p> Price: <del>${{product.price}}</del>  <strong>${{price}}</strong></p>
+           
+           <a href="{% url 'cart' product.id %}" class="btn btn-primary add-to-cart">
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+            </a>
+        </div>
+        <div class=" col-md-6 p-3 mb-2 bg-primary text-white">
+            <h1>Description</h1></div>
+        <p> {{product.description |safe}}</p>
+    </div>
+
+    <section class="book_section layout_padding">
+        <div class="container">
+          <div class="heading_container">
+            <h2>
+             Review
+            </h2>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form_container">
+                <form method="POST"  action ="{% url 'review' product.id %}" enctype="multipart/form-data">
+                  {% csrf_token %}
+                  <div>
+                    <p>Image</p>
+                  </div>
+                  <div>
+                    <input type="file" class="form-control" name="image" placeholder="Your Name" value="" />
+                  </div>
+                  <div>
+                    <p>Message</p>
+                  </div>
+                  <div>
+                    <textarea id="w3review" name="message" rows="4" cols="50" placeholder="Message"> </textarea>
+                  </div>
+                  <div class="rating">
+                    <label for="id_rating">Rating:</label>
+                    <span class="stars">
+                      {% for i in "12345" %}
+                        <input type="radio" id="star{{ forloop.counter }}" name="rating" value="{{ forloop.counter }}" {% if forloop.counter == form.initial.rating %}checked{% endif %}>
+                        <label for="star{{ forloop.counter }}" class="star">★</label>
+                      {% endfor %}
+                    </span>
+                  </div>
+                <br>
+
+                  <div class="btn_box">
+                    <button class="btn btn-primary">
+                      Comment
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="map_container ">  
+                <h3>Reviews</h3>
+                {% if comments %}
+                  <ul>
+                    {% for review in comments %}
+                      <li>
+                        <strong>{{ review.user.name }}</strong>:
+                        <span class="stars">
+                          {% for star in "★★★★★" %}
+                            <span class="star{% if forloop.counter <= review.rating %} filled{% endif %}">★</span>
+                          {% endfor %}
+                        </span>
+                        <p>{{ review.comment }}</p>
+                        <a href="{{review.image.url}}"><img src="{{review.image.url}}" alt="Girl in a jacket" width="50" height="60"></a>
+                        <small>Reviewed on {{ review.created_at }}</small>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <p>No reviews yet.</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+</div>
+</div>
+
+{% endblock content %}

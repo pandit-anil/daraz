@@ -1,0 +1,73 @@
+{% extends "master.html" %}
+{% block content %}
+<div class="container  margin-top-100">
+
+<div class="container mt-4 ">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{sys.logo.url}}" alt="Product Image" class="img-fluid" width="300" height="400">
+            
+        </div>
+    </div>
+</div>
+</div>
+<section class="book_section layout_padding">
+    <div class="container">
+      <div class="heading_container">
+        <h2>
+          Contact Us
+        </h2>
+    		{% if messages %}
+			<script>
+				document.addEventListener("DOMContentLoaded", function() {
+					{% for message in messages %}
+						alert("{{ message }}");
+					{% endfor %}
+				});
+			</script>
+		{% endif %}
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form_container">
+            {% if user.is_authenticated %}
+            <form method="POST"  action ="{% url 'contact' %}">
+              {% csrf_token %}
+              <div>
+                <p>Name</p>
+              </div>
+              <div>
+                <input type="text" class="form-control" name="name" placeholder="Your Name" value="{{user.first_name}}" />
+              </div>
+              <div>
+                <p>Email</p>
+              </div>
+              <div>
+                <input type="email" class="form-control" name="email" placeholder="Your Email" value="{{user.email}}"/>
+              </div>
+              <div>
+                <p>Message</p>
+              </div>
+              <div>
+                <textarea id="w3review" name="message" rows="4" cols="50" placeholder="Message"> </textarea>
+              </div>
+              <div class="btn_box">
+                <button class ="btn btn-primary">
+                  Send
+                </button>
+              </div>
+            </form>
+            {% else %}
+            <p>Login required for contact us</p>
+            {% endif %}
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="map_container ">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7067.318826546683!2d85.3276991913622!3d27.66600730482469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb19ddc182f339%3A0xec009106dd012081!2sGwarko%2C%20Lalitpur!5e0!3m2!1sen!2snp!4v1720161911074!5m2!1sen!2snp" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

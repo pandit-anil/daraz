@@ -1,0 +1,64 @@
+{% extends "master.html" %}
+{% load static %}
+{% block content %}
+
+
+<div class="container full-height margin-top-100">
+    <div class="row centered">
+        <div class="col-md-6">
+
+            {% if messages %}
+            <div class="mb-4" id="message-container">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        
+
+            
+            <h2 class="text-center">Sign Up</h2>
+            <form method ="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Name</label>
+                    <input type="text" class="form-control" name="name" placeholder="Enter your Name"  required>
+                </div>
+                <div class="form-group">
+                    <label for="username">username</label>
+                    <input type="text" class="form-control" name="username" placeholder="Enter your username"  required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input type="email" class="form-control" name="email" placeholder="Enter your email"  required>
+                </div>
+                <div class="form-group">
+                    <label for="number">Mobile Number</label>
+                    <input type="number" class="form-control" name="mobile" placeholder="Enter your mobile number"  required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name="password" placeholder="Enter your password" required >
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" name="confirmPassword" placeholder="Confirm your password" required >
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Image</label>
+                    <input type="file" class="form-control" name="image" placeholder="image"  >
+                </div>
+                <button type="submit" class="next-btn-primary btn btn-block" >Sign Up</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<br>
+<br>
+{% endblock content %}

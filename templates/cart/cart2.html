@@ -1,0 +1,203 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - E-commerce Site</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="{% static "css/index.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}"> <!-- Add your CSS file here -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Add jQuery for AJAX -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="{% url 'index' %}">Daraz</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <form class="form-inline mx-auto">
+                <input class="form-control mr-sm-2 search-input" type="search" placeholder="Search in Daraz" aria-label="Search">
+                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> Account
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                        
+                        {% if user.is_authenticated %}
+                        <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        {% else %}
+                        <a class="dropdown-item" href="{% url 'login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                        <a class="dropdown-item" href="{% url 'logout' %}"><i class="fas fa-user-plus"></i> Sign Up</a>
+                        {% endif %}
+                    </div>
+                </li>
+                <li class="nav-item">
+                    {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'cartview' %}"><i class="fas fa-shopping-cart"></i> Cart</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About Us</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+  
+
+    <div class="container  margin-top-100">
+    
+    
+        <div class="cart">
+            <h2>Dear, {{order.user.username}}</h2>
+
+            {% if messages %}
+            <div class="mb-4" id="message-container">
+                {% for message in messages %}
+                    <div class="alert  alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="POST" action="{% url 'payment' %}">
+            {% csrf_token %}
+            {% for item in order_items %}
+                <div class="cart-item">
+                    <div class="cart-item-store">
+                        <input type="checkbox" name="selected_items" value="{{ item.id }}" class="select-item" data-item-id="{{ item.id }}" data-item-price="{{ item.total_price }}">
+                       
+                    </div>
+                    <div class="cart-item-details">
+                        <img src="{{ item.product.image.url }}" alt="No image">
+                        <div>
+                            <h5>{{ item.product.name | safe | truncatechars:30 }}</h5>
+                        </div>
+                        <div>
+                            <p class="price">Rs. {{ item.discounted_price }} </p>
+                            {% if item.product.discount %}
+                                <p class="original-price">Rs. {{ item.product.price }}  </p>
+                                <a href="{% url 'remove' item.id %}"><i class="fas fa-trash"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="quantity">
+                         <form method="GET" action="{% url 'decre' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit">-</button>
+                         </form>
+                            <input type="text" value="{{ item.quantity }}" readonly>
+                            <form method="GET" action="{% url 'incre' item.id %}">
+                                {% csrf_token %}
+                            <button type="submit">+</button></a>
+                        </form> 
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="order-summary">
+         
+            <h3>Order Summary</h3>
+            <p>Subtotal (<span id="item-count">0</span> items): Rs. <span id="subtotal">0</span></p>
+            <p>Shipping Fee: Rs. 0</p> <!-- Adjust this based on your logic -->
+            <input type="text" placeholder="Enter Voucher Code">
+            <button>Apply</button>
+            <p>Total: Rs. <span id="total">0</span></p>  
+            <button type="submit">Proceed to Checkout</button>
+        </div>
+    </form>
+    </div>
+
+
+
+
+<div class="container-fluid ">
+        <footer class="text-center mt-4">
+            <p>© 2024 Daraz. All rights reserved.</p>
+        </footer>
+</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Wait for 20 seconds (20000 milliseconds)
+            setTimeout(function() {
+                // Select the message container and remove it
+                var messageContainer = document.getElementById("message-container");
+                if (messageContainer) {
+                    messageContainer.style.transition = "opacity 1s ease";
+                    messageContainer.style.opacity = 0; // Fade out effect
+                    setTimeout(function() {
+                        messageContainer.remove(); // Remove the element from the DOM
+                    }, 1000); // Wait for the fade out transition to complete
+                }
+            }, 20000); // 20000 milliseconds = 20 seconds
+        });
+
+        </script>
+
+         <!-- JavaScript to handle quantity increment and decrement -->
+    <script>
+        $(document).ready(function() {
+            function updateSummary() {
+                let totalItems = 0;
+                let subtotal = 0;
+
+                $('.select-item:checked').each(function() {
+                    const price = parseFloat($(this).data('item-price'));
+                    subtotal += price;
+                    totalItems++;
+                });
+
+                $('#item-count').text(totalItems);
+                $('#subtotal').text(subtotal.toFixed(2));
+                $('#total').text(subtotal.toFixed(2));
+            }
+
+            $('.select-item').on('change', function() {
+                updateSummary();
+            });
+
+            $('.quantity button').on('click', function() {
+                const input = $(this).siblings('input');
+                const itemId = $(this).data('item-id');
+                let value = parseInt(input.val());
+
+                if ($(this).text() === '+') {
+                    value++;
+                } else if ($(this).text() === '-' && value > 1) {
+                    value--;
+                }
+
+                input.val(value);
+
+                // Optionally, send an AJAX request to update the quantity in the backend
+                updateSummary(); // Update summary after changing quantity
+            });
+        });
+    </script>
+
+
+         
+</body>
+</html>

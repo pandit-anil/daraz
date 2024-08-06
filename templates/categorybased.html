@@ -1,0 +1,36 @@
+{% extends "master.html" %}
+{% load static %}
+
+{% block content %}
+<br>
+<br>
+<br>
+
+<div class="container mt-4">
+
+<div class="col-md-12">
+    <h2><b>{{cate.name}}</b></h2>
+</div>
+<div class="row mt-4">
+    {% for product in post %}
+    <div class="col-md-3">
+        <div class="card category-item">
+            <img src="{{product.image.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <a href="{% url 'details' product.id %}" target = "_blank">
+                    <h5 class="card-title">{{product.name | safe | truncatechars:30}}</h5>
+                </a>
+                <p class="card-text">Price: <del>${{product.price}}</del>  <strong>${{product.original_price}}</strong></p>
+              
+                {% comment %} <a href="{% url 'cart' product.product.id %}" class="btn btn-primary add-to-cart">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </a> {% endcomment %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+</div>
+
+{% endblock content %}

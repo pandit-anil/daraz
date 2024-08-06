@@ -1,0 +1,38 @@
+{% extends "master.html" %}
+{% block content %}
+<div class="container  margin-top-100">
+
+<div class="container mt-4 ">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{sys.logo.url}}" alt="Product Image" class="img-fluid" width="200" height="100">
+        </div>
+        <h1 class=" text-center">
+            About Us
+          </h1>
+    </div>
+</div>
+</div>
+<section class="book_section layout_padding">
+    <div class="container">
+       
+      <div class="heading_container">
+        <h4 class="my-6">{{sys.slogan | safe}}</h4>
+        <p>Welcome to our company! We are committed to delivering the best service to our customers.</p>
+        
+        <h2>Our Mission</h2>
+        <p>Our mission is to provide top-quality products and services that improve the lives of our customers.</p>
+        <h2>Our Values</h2>
+        <ul>
+            <li>Customer Focus</li>
+            <li>Integrity</li>
+            <li>Innovation</li>
+            <li>Teamwork</li>
+        </ul>
+        
+        <p>{{sys.about | safe}}.</p>
+      </div>
+     
+    </div>
+  </section>
+{% endblock content %}
